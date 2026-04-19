@@ -55,7 +55,7 @@ def book(room_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    # 👉 ALWAYS fetch room (needed for both GET & POST)
+    #  ALWAYS fetch room (needed for both GET & POST)
     cursor.execute("SELECT * FROM rooms WHERE id = %s", (room_id,))
     room = cursor.fetchone()
 
@@ -89,7 +89,7 @@ def book(room_id):
                 error="Room already booked for selected dates"
             )
 
-        # ✅ Insert booking
+        #  Insert booking
         cursor.execute("""
             INSERT INTO bookings
             (guest_name, guest_email, guest_phone, room_id, check_in, check_out, total_price)
@@ -99,7 +99,7 @@ def book(room_id):
         db.commit()
         db.close()
 
-        # ✅ REDIRECT (DO NOT render admin here)
+        #  REDIRECT (DO NOT render admin here)
         return redirect(url_for('admin'))
 
     # ---------------- GET ----------------
@@ -153,19 +153,19 @@ def admin():
     except:
         top_room = "No data"
 
-    # 📊 Total bookings
+    #  Total bookings
     cursor.execute("SELECT COUNT(*) FROM bookings")
     total_bookings = cursor.fetchone()['COUNT(*)']
 
-    # 💰 Revenue
+    #  Revenue
     cursor.execute("SELECT SUM(total_price) FROM bookings")
     total_revenue = cursor.fetchone()['SUM(total_price)'] or 0
 
-    # 🏨 Total rooms
+    #  Total rooms
     cursor.execute("SELECT COUNT(*) FROM rooms")
     total_rooms = cursor.fetchone()['COUNT(*)']
 
-    # 💰 Revenue per day
+    #  Revenue per day
     cursor.execute("""
     SELECT check_in, SUM(total_price)
     FROM bookings
@@ -178,7 +178,7 @@ def admin():
     rev_dates = [str(row['check_in']) for row in rev_data]
     revenues = [float(row['SUM(total_price)']) for row in rev_data]
 
-    # 📅 Availability
+    #  Availability
     today = date.today()
 
     cursor.execute("""
@@ -190,7 +190,7 @@ def admin():
     booked_rooms = cursor.fetchone()['COUNT(DISTINCT room_id)']
     available_rooms = total_rooms - booked_rooms
     
-    # 📊 Bookings per day
+    #  Bookings per day
     cursor.execute("""
     SELECT check_in, COUNT(*) 
     FROM bookings 
