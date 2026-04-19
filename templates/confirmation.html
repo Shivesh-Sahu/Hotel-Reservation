@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Confirmed — Hotel Grand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>🏨 Hotel Grand</h1>
+    <nav>
+        <a href="/" class="nav-signin">Home</a>
+        <a href="/admin" class="nav-admin">Admin Panel</a>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Success Banner -->
+    <div style="background:#008009; color:white; border-radius:8px;
+                padding:16px 24px; margin-bottom:24px;
+                display:flex; align-items:center; gap:12px;">
+        <span style="font-size:24px;">✓</span>
+        <div>
+            <p style="font-weight:700; font-size:16px;">
+                Your booking is confirmed!
+            </p>
+            <p style="font-size:13px; opacity:0.9;">
+                Booking reference: <strong>#HG{{ range(10000, 99999)|random
+                }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+
+        <!-- Left: Confirmation Details -->
+        <div style="flex:2; min-width:300px;">
+            <div class="confirm-box" style="text-align:left; max-width:100%;">
+
+                <!-- Guest Info -->
+                <div style="display:flex; justify-content:space-between;
+                            align-items:center; margin-bottom:20px;
+                            padding-bottom:16px; border-bottom:1px solid #e0e8f0;">
+                    <div>
+                        <p style="font-size:13px; color:#888; margin-bottom:4px;">
+                            GUEST NAME
+                        </p>
+                        <p style="font-size:18px; font-weight:700;">
+                            {{ name }}
+                        </p>
+                        <p style="font-size:13px; color:#888;">{{ email }}</p>
+                    </div>
+                    <div style="background:#003580; color:white;
+                                padding:8px 14px; border-radius:6px 6px 6px 0;
+                                font-size:20px; font-weight:700;">
+                        {% if room_type == 'Suite' %}9.8
+                        {% elif room_type == 'Double' %}9.2
+                        {% else %}8.9{% endif %}
+                    </div>
+                </div>
+
+                <!-- Room Image -->
+                {% if room_type == 'Single' %}
+                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80"
+                     alt="Room" style="width:100%; height:200px;
+                     object-fit:cover; border-radius:8px; margin-bottom:20px;">
+                {% elif room_type == 'Double' %}
+                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80"
+                     alt="Room" style="width:100%; height:200px;
+                     object-fit:cover; border-radius:8px; margin-bottom:20px;">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80"
+                     alt="Room" style="width:100%; height:200px;
+                     object-fit:cover; border-radius:8px; margin-bottom:20px;">
+                {% endif %}
+
+                <!-- Booking Details -->
+                <p style="font-size:13px; font-weight:700; color:#888;
+                          text-transform:uppercase; margin-bottom:12px;">
+                    Booking Details
+                </p>
+
+                <div class="confirm-details">
+                    <div class="detail-row">
+                        <span style="color:#888;">Room</span>
+                        <strong>{{ room_number }} — {{ room_type }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span style="color:#888;">Check-In</span>
+                        <strong>{{ check_in }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span style="color:#888;">Check-Out</span>
+                        <strong>{{ check_out }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span style="color:#888;">Duration</span>
+                        <strong>{{ nights }} night(s)</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span style="color:#888;">Room charges</span>
+                        <strong>₹{{ total }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span style="color:#888;">Taxes & fees (18%)</span>
+                        <strong>₹{{ (total|float * 0.18)|int }}</strong>
+                    </div>
+                    <div class="detail-row total-row">
+                        <span>Total Amount</span>
+                        <strong>₹{{ total }}</strong>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="confirm-actions">
+                    <a href="/" class="btn btn-outline">Back to Home</a>
+                    <a href="/my_bookings?email={{ email }}"
+                       class="btn">View My Bookings</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: What's Next -->
+        <div style="flex:1; min-width:240px;">
+
+            <!-- GIF -->
+            <div style="background:white; border-radius:8px;
+                        border:1px solid #e0e8f0; padding:20px;
+                        text-align:center; margin-bottom:16px;">
+                <img src="https://media.giphy.com/media/g9582DNuQppxC/giphy.gif"
+                     alt="Confirmed"
+                     style="width:100px; height:100px;
+                            border-radius:50%; margin-bottom:12px;">
+                <p style="font-size:15px; font-weight:700; color:#008009;">
+                    You're all set!
+                </p>
+                <p style="font-size:13px; color:#888; margin-top:4px;">
+                    Thank you for choosing Hotel Grand
+                </p>
+            </div>
+
+            <!-- What's included -->
+            <div style="background:white; border-radius:8px;
+                        border:1px solid #e0e8f0; padding:20px;
+                        margin-bottom:16px;">
+                <p style="font-size:13px; font-weight:700; color:#1a1a2e;
+                          margin-bottom:14px;">
+                    What's included in your stay
+                </p>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="font-size:13px; color:#008009;">
+                        ✓ Free breakfast every morning
+                    </div>
+                    <div style="font-size:13px; color:#008009;">
+                        ✓ Free high-speed WiFi
+                    </div>
+                    <div style="font-size:13px; color:#008009;">
+                        ✓ Free parking
+                    </div>
+                    <div style="font-size:13px; color:#008009;">
+                        ✓ 24/7 room service
+                    </div>
+                    <div style="font-size:13px; color:#008009;">
+                        ✓ Free cancellation
+                    </div>
+                </div>
+            </div>
+
+            <!-- Need Help -->
+            <div style="background:#f2f6fa; border-radius:8px;
+                        border:1px solid #e0e8f0; padding:20px;">
+                <p style="font-size:13px; font-weight:700;
+                          color:#1a1a2e; margin-bottom:8px;">
+                    Need help?
+                </p>
+                <p style="font-size:13px; color:#888; margin-bottom:12px;">
+                    Our front desk is available 24/7
+                </p>
+                <p style="font-size:13px; color:#0071c2; font-weight:700;">
+                    📞 1800-HOTEL-GRAND
+                </p>
+                <p style="font-size:13px; color:#0071c2; font-weight:700;
+                          margin-top:6px;">
+                    ✉ support@hotelgrand.com
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Hotel Grand &nbsp;·&nbsp; All rights reserved
+</footer>
+
+</body>
+</html>

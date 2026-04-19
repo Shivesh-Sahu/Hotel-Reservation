@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Grand — Book Your Stay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>🏨 Hotel Grand</h1>
+    <nav>
+        <a href="/" class="nav-signin">Home</a>
+        <a href="/admin" class="nav-admin">Admin Panel</a>
+    </nav>
+</header>
+
+<!-- Hero + Search Bar -->
+<div class="hero">
+    <h2>Find your perfect room</h2>
+    <p>Search the best deals on rooms at Hotel Grand</p>
+
+    <div class="search-box">
+        <div class="search-field">
+            <svg width="16" height="16" fill="none" stroke="#555"
+                 stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input type="text" placeholder="Hotel Grand, India">
+        </div>
+        <div class="search-field" style="max-width:160px;">
+            <svg width="16" height="16" fill="none" stroke="#555"
+                 stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input type="date" name="check_in">
+        </div>
+        <div class="search-field" style="max-width:160px;">
+            <svg width="16" height="16" fill="none" stroke="#555"
+                 stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <input type="date" name="check_out">
+        </div>
+        <div class="search-field" style="max-width:150px;">
+            <svg width="16" height="16" fill="none" stroke="#555"
+                 stroke-width="2" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+            </svg>
+            <select style="border:none;outline:none;
+                           font-size:14px;background:transparent;">
+                <option>1 guest</option>
+                <option selected>2 guests</option>
+                <option>3 guests</option>
+                <option>4 guests</option>
+            </select>
+        </div>
+       <button class="search-btn" onclick="window.location.href='/'">Search</button>
+    </div>
+</div>
+
+
+<!-- Filter Tabs -->
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+    <a href="/" class="filter-tab {% if selected_type == 'All' %}active{% endif %}">All Rooms</a>
+    <a href="/?type=Single" class="filter-tab {% if selected_type == 'Single' %}active{% endif %}">Single</a>
+    <a href="/?type=Double" class="filter-tab {% if selected_type == 'Double' %}active{% endif %}">Double</a>
+    <a href="/?type=Suite" class="filter-tab {% if selected_type == 'Suite' %}active{% endif %}">Suite</a>
+</div>
+
+<main>
+    <!-- Results Header -->
+    <div class="results-header">
+        <h3>{{ rooms|length }} room(s) available</h3>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <span style="font-size:13px; color:#888;">Sort by:</span>
+           <select onchange="window.location.href='/?type={{ selected_type }}&sort=' + this.value"
+        style="padding:7px 12px; border:1px solid #ccc;
+               border-radius:4px; font-size:13px; color:#333;">
+    <option value="default" {% if sort == 'default' %}selected{% endif %}>
+        Our top picks
+    </option>
+    <option value="low" {% if sort == 'low' %}selected{% endif %}>
+        Price (low to high)
+    </option>
+    <option value="high" {% if sort == 'high' %}selected{% endif %}>
+        Price (high to low)
+    </option>
+</select>
+        </div>
+    </div>
+
+    <!-- Room Cards -->
+    {% for room in rooms %}
+    <div class="room-card">
+
+        <!-- Image -->
+        <div class="room-card-img">
+            {% if room.room_type == 'Single' %}
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80"
+                 alt="Single Room">
+            <span class="img-badge">Great deal</span>
+            {% elif room.room_type == 'Double' %}
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400&q=80"
+                 alt="Double Room">
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&q=80"
+                 alt="Suite">
+            <span class="img-badge img-badge-purple">Luxury Suite</span>
+            {% endif %}
+        </div>
+
+        <!-- Body -->
+        <div class="room-card-body">
+            <div class="room-info">
+                <div class="room-name">Room {{ room.room_number }} —
+                    {{ room.room_type }}</div>
+                <div class="room-location">Hotel Grand, Main Block, India</div>
+
+                <!-- Stars -->
+                <div class="stars">
+                    {% if room.room_type == 'Suite' %}
+                    ★★★★★
+                    {% else %}
+                    ★★★★☆
+                    {% endif %}
+                </div>
+
+                <!-- Amenities -->
+                <div class="amenity-row">
+                    <span class="amenity">✓ Free WiFi</span>
+                    <span class="amenity">✓ AC</span>
+                    {% if room.room_type == 'Double' %}
+                    <span class="amenity">✓ TV</span>
+                    <span class="amenity">✓ 2 Beds</span>
+                    {% elif room.room_type == 'Suite' %}
+                    <span class="amenity">✓ Jacuzzi</span>
+                    <span class="amenity">✓ Mini Bar</span>
+                    <span class="amenity">✓ City View</span>
+                    {% else %}
+                    <span class="amenity">✓ 1 Bed</span>
+                    {% endif %}
+                    <span class="amenity">✓ Breakfast</span>
+                </div>
+
+                <div class="free-cancel">✓ Free cancellation</div>
+                <div class="no-prepay">✓ No prepayment needed</div>
+
+                <!-- Badge -->
+                {% if room.room_type == 'Single' %}
+                <span class="room-badge badge-single">Single Room</span>
+                {% elif room.room_type == 'Double' %}
+                <span class="room-badge badge-double">Double Room</span>
+                {% else %}
+                <span class="room-badge badge-suite">Luxury Suite</span>
+                {% endif %}
+            </div>
+
+            <!-- Price Column -->
+            <div class="room-price-col">
+                <!-- Rating -->
+                <div class="rating-box">
+                    {% if room.room_type == 'Suite' %}
+                    <div class="rating-score">9.8</div>
+                    <div>
+                        <div class="rating-label">Exceptional</div>
+                        <div class="rating-count">56 reviews</div>
+                    </div>
+                    {% elif room.room_type == 'Double' %}
+                    <div class="rating-score">9.2</div>
+                    <div>
+                        <div class="rating-label">Superb</div>
+                        <div class="rating-count">98 reviews</div>
+                    </div>
+                    {% else %}
+                    <div class="rating-score">8.9</div>
+                    <div>
+                        <div class="rating-label">Excellent</div>
+                        <div class="rating-count">142 reviews</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <div class="price-label">1 night, 2 guests</div>
+                    <div class="price-amount">₹{{ room.price_per_night }}</div>
+                    <div class="price-tax">
+                        +₹{{ (room.price_per_night|float * 0.18)|int }} taxes & fees
+                    </div>
+                    <a href="/book/{{ room.id }}" class="book-btn">
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="no-bookings">
+        <p style="font-size:18px; margin-bottom:8px;">
+            No rooms available right now.
+        </p>
+        <p style="font-size:14px;">Please check back later.</p>
+    </div>
+    {% endfor %}
+
+    <!-- My Bookings Lookup -->
+    <div class="lookup-box">
+        <h3>🔍 View My Bookings</h3>
+        <form action="/my_bookings" method="GET">
+            <div class="lookup-row">
+                <input type="email" name="email"
+                       placeholder="Enter your email address" required>
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 Hotel Grand &nbsp;·&nbsp;
+    All rights reserved &nbsp;·&nbsp;
+    Built with Python + Flask + MySQL
+</footer>
+
+</body>
+</html>

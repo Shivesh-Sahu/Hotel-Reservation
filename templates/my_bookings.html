@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings — Hotel Grand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>🏨 Hotel Grand</h1>
+    <nav>
+        <a href="/" class="nav-signin">← Home</a>
+        <a href="/admin" class="nav-admin">Admin Panel</a>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Page Header -->
+     <form method="GET" action="/my_bookings" style="margin-bottom:20px;">
+    <input type="email" name="email" placeholder="Enter your email"
+           style="padding:8px; border-radius:6px; border:1px solid #ccc;" required>
+    <button type="submit"
+            style="padding:8px 12px; background:#0071c2; color:white; border:none; border-radius:6px;">
+        View Bookings
+    </button>
+    </form>
+    <div style="display:flex; justify-content:space-between;
+                align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+        <div>
+            <h2 style="font-size:22px; font-weight:700;
+                       color:#1a1a2e; margin-bottom:4px;">
+                My Bookings
+            </h2>
+        {% if email %}
+           <p style="font-size:13px; color:#888;">
+              Showing reservations for 
+              <strong style="color:#0071c2;">{{ email }}</strong>
+           </p>
+        {% endif %}
+        </div>
+        <a href="/" class="btn">+ Book Another Room</a>
+    </div>
+
+    {% if bookings %}
+
+    <!-- Booking Count -->
+    <div style="background:#f0f7ff; border:1px solid #b8d4f0;
+                border-radius:6px; padding:10px 16px;
+                margin-bottom:20px; font-size:13px; color:#003580;">
+        You have <strong>{{ bookings|length }} active booking(s)</strong>
+        at Hotel Grand.
+    </div>
+
+    <!-- Booking Cards -->
+    {% for b in bookings %}
+    <div class="room-card" style="margin-bottom:16px;">
+
+        <!-- Room Image -->
+        <div class="room-card-img" style="width:180px; min-width:180px;">
+            {% if b.room_type == 'Single' %}
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80"
+                 alt="Single Room">
+            {% elif b.room_type == 'Double' %}
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400&q=80"
+                 alt="Double Room">
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&q=80"
+                 alt="Suite">
+            {% endif %}
+        </div>
+
+        <!-- Body -->
+        <div class="room-card-body">
+            <div class="room-info">
+
+                <!-- Room Name & Badge -->
+                <div style="display:flex; align-items:center;
+                            gap:10px; margin-bottom:6px; flex-wrap:wrap;">
+                    <span class="room-name" style="font-size:17px;">
+                        Room {{ b.room_number }} — {{ b.room_type }}
+                    </span>
+                    {% if b.room_type == 'Single' %}
+                    <span class="room-badge badge-single">Single</span>
+                    {% elif b.room_type == 'Double' %}
+                    <span class="room-badge badge-double">Double</span>
+                    {% else %}
+                    <span class="room-badge badge-suite">Suite</span>
+                    {% endif %}
+                </div>
+
+                <div class="room-location">Hotel Grand, Main Block, India</div>
+
+                <!-- Stars -->
+                <div class="stars">
+                    {% if b.room_type == 'Suite' %}★★★★★
+                    {% else %}★★★★☆{% endif %}
+                </div>
+
+                <!-- Dates -->
+                <div style="display:flex; gap:20px; margin-bottom:10px;
+                            flex-wrap:wrap;">
+                    <div style="background:#f2f6fa; border-radius:6px;
+                                padding:10px 16px; border:1px solid #e0e8f0;">
+                        <p style="font-size:11px; color:#888;
+                                  text-transform:uppercase; margin-bottom:4px;">
+                            Check-In
+                        </p>
+                        <p style="font-size:15px; font-weight:700;
+                                  color:#1a1a2e;">
+                            {{ b.check_in }}
+                        </p>
+                    </div>
+                    <div style="display:flex; align-items:center;
+                                color:#888; font-size:18px;">→</div>
+                    <div style="background:#f2f6fa; border-radius:6px;
+                                padding:10px 16px; border:1px solid #e0e8f0;">
+                        <p style="font-size:11px; color:#888;
+                                  text-transform:uppercase; margin-bottom:4px;">
+                            Check-Out
+                        </p>
+                        <p style="font-size:15px; font-weight:700;
+                                  color:#1a1a2e;">
+                            {{ b.check_out }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="amenity-row">
+                    <span class="amenity">✓ Free WiFi</span>
+                    <span class="amenity">✓ Free Breakfast</span>
+                    <span class="amenity">✓ Free Cancellation</span>
+                    <span class="amenity">✓ Free Parking</span>
+                </div>
+
+                <!-- Booking ID -->
+                <p style="font-size:12px; color:#888; margin-top:6px;">
+                    Booking ID: <strong>#{{ b.id }}</strong>
+                </p>
+            </div>
+
+            <!-- Price Column -->
+            <div class="room-price-col">
+                <div class="rating-box">
+                    <div class="rating-score">
+                        {% if b.room_type == 'Suite' %}9.8
+                        {% elif b.room_type == 'Double' %}9.2
+                        {% else %}8.9{% endif %}
+                    </div>
+                    <div>
+                        <div class="rating-label">
+                            {% if b.room_type == 'Suite' %}Exceptional
+                            {% elif b.room_type == 'Double' %}Superb
+                            {% else %}Excellent{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <p style="font-size:11px; color:#888; margin-bottom:4px;">
+                        Total paid
+                    </p>
+                    <p style="font-size:26px; font-weight:700; color:#1a1a2e;
+                              margin-bottom:4px;">
+                        ₹{{ b.total_price }}
+                    </p>
+                    <p style="font-size:11px; color:#888; margin-bottom:16px;">
+                        includes taxes & fees
+                    </p>
+
+                    <!-- Status Badge -->
+                    <div style="background:#f0fff4; border:1px solid #c3e6cb;
+                                border-radius:4px; padding:6px 12px;
+                                font-size:12px; font-weight:700;
+                                color:#008009; text-align:center;
+                                margin-bottom:12px;">
+                        ✓ Confirmed
+                    </div>
+
+                    <!-- Cancel Button -->
+                    <a href="/cancel/{{ b.id }}"
+                       class="btn btn-red"
+                       style="width:100%; text-align:center; display:block;
+                              padding:10px;"
+                       onclick="return confirm(
+                           'Are you sure you want to cancel this booking?')">
+                        Cancel Booking
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+
+    <!-- No Bookings -->
+    <div class="no-bookings">
+        <img src="https://media.giphy.com/media/3o7TKwmnDgQb5jemjK/giphy.gif"
+             alt="No bookings"
+             style="width:120px; border-radius:12px;
+                    opacity:0.7; margin-bottom:16px;">
+        <p style="font-size:18px; font-weight:700;
+                  margin-bottom:8px; color:#1a1a2e;">
+            No bookings found!
+        </p>
+        <p style="font-size:14px; margin-bottom:20px;">
+            We couldn't find any reservations for
+            <strong>{{ email }}</strong>
+        </p>
+        <a href="/" class="btn">Browse Available Rooms</a>
+    </div>
+
+    {% endif %}
+
+</main>
+
+<footer>
+    &copy; 2026 Hotel Grand &nbsp;·&nbsp; All rights reserved
+</footer>
+
+</body>
+</html>

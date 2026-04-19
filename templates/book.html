@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Room {{ room.room_number }} — Hotel Grand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>🏨 Hotel Grand</h1>
+    <nav>
+        <a href="/" class="nav-signin">← Back to Rooms</a>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Breadcrumb -->
+    <div style="font-size:13px; color:#888; margin-bottom:20px;">
+        <a href="/" style="color:#0071c2; text-decoration:none;">Home</a>
+        &nbsp;›&nbsp;
+        <a href="/" style="color:#0071c2; text-decoration:none;">All Rooms</a>
+        &nbsp;›&nbsp;
+        <span>Room {{ room.room_number }}</span>
+    </div>
+
+    <div class="form-wrapper">
+
+        <!-- Left Sidebar -->
+        <div class="form-sidebar">
+
+            <!-- Room Image -->
+            {% if room.room_type == 'Single' %}
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80"
+                 alt="Single Room">
+            {% elif room.room_type == 'Double' %}
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=700&q=80"
+                 alt="Double Room">
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700&q=80"
+                 alt="Suite">
+            {% endif %}
+
+            <!-- Room Info Card -->
+            <div class="form-info-card">
+                <div style="display:flex; justify-content:space-between;
+                            align-items:flex-start; margin-bottom:12px;">
+                    <div>
+                        <h3 style="font-size:17px; font-weight:700;
+                                   color:#1a1a2e; margin-bottom:4px;">
+                            Room {{ room.room_number }}
+                        </h3>
+                        {% if room.room_type == 'Single' %}
+                        <span class="room-badge badge-single">Single Room</span>
+                        {% elif room.room_type == 'Double' %}
+                        <span class="room-badge badge-double">Double Room</span>
+                        {% else %}
+                        <span class="room-badge badge-suite">Luxury Suite</span>
+                        {% endif %}
+                    </div>
+                    <div style="background:#003580; color:white;
+                                padding:6px 10px; border-radius:6px 6px 6px 0;
+                                font-size:15px; font-weight:700;">
+                        {% if room.room_type == 'Suite' %}9.8
+                        {% elif room.room_type == 'Double' %}9.2
+                        {% else %}8.9{% endif %}
+                    </div>
+                </div>
+
+                <!-- Stars -->
+                <div class="stars" style="margin-bottom:12px;">
+                    {% if room.room_type == 'Suite' %}★★★★★
+                    {% else %}★★★★☆{% endif %}
+                </div>
+
+                <!-- Amenities -->
+                <div style="border-top:1px solid #e0e8f0; padding-top:12px;">
+                    <p style="font-size:12px; font-weight:700; color:#888;
+                              text-transform:uppercase; margin-bottom:10px;">
+                        What's included
+                    </p>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ Free cancellation
+                        </div>
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ Free breakfast included
+                        </div>
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ Free WiFi
+                        </div>
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ Free parking
+                        </div>
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ 24/7 room service
+                        </div>
+                        {% if room.room_type == 'Suite' %}
+                        <div style="display:flex; align-items:center;
+                                    gap:8px; font-size:13px; color:#008009;">
+                            ✓ Jacuzzi & Mini Bar
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div style="border-top:1px solid #e0e8f0;
+                            margin-top:16px; padding-top:16px;">
+                    <p style="font-size:12px; color:#888; margin-bottom:4px;">
+                        Price per night
+                    </p>
+                    <p style="font-size:26px; font-weight:700; color:#1a1a2e;">
+                        ₹{{ room.price_per_night }}
+                    </p>
+                    <p style="font-size:12px; color:#888;">
+                        +₹{{ (room.price_per_night|float * 0.18)|int }}
+                        taxes & fees
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Right: Booking Form -->
+        <div class="form-container">
+
+            <!-- Form Header -->
+            <div style="border-bottom:1px solid #e0e8f0; padding-bottom:16px;
+                        margin-bottom:20px;">
+                <h2>Your details</h2>
+                <p style="font-size:13px; color:#888; margin-top:4px;">
+                    Almost done! Fill in your details to complete the booking.
+                </p>
+            </div>
+
+            <!-- Trust Badge -->
+            <div style="background:#f0fff4; border:1px solid #c3e6cb;
+                        border-radius:4px; padding:10px 14px;
+                        margin-bottom:20px; font-size:13px; color:#008009;
+                        font-weight:700;">
+                🔒 Safe & Secure Booking — Your data is protected
+            </div>
+            <h2>Book Room</h2>
+
+             {% if error %}
+             <div style="
+                background-color: #ffe6e6;
+                color: #cc0000;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                font-weight: bold;
+             ">
+                ❌ {{ error }}
+            </div>
+            {% endif %}
+            
+            <form action="/book/{{ room.id }}" method="POST">
+
+                <label>Full Name</label>
+                <input type="text" name="name"
+                       placeholder="As shown on your ID" required>
+
+                <label>Email Address</label>
+                <input type="email" name="email"
+                       placeholder="Confirmation will be saved here" required>
+
+                <label>Phone Number</label>
+                <input type="tel" name="phone"
+                       placeholder="10-digit mobile number" required>
+
+                <!-- Date Row -->
+                <div class="form-row" style="margin-top:14px;">
+                    <div>
+                        <label>Check-In Date</label>
+                        <input type="date" name="check_in" required>
+                    </div>
+                    <div>
+                        <label>Check-Out Date</label>
+                        <input type="date" name="check_out" required>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div style="background:#f2f6fa; border-radius:6px;
+                            padding:16px; margin-top:20px;
+                            border:1px solid #e0e8f0;">
+                    <p style="font-size:13px; font-weight:700;
+                              color:#1a1a2e; margin-bottom:10px;">
+                        Price summary
+                    </p>
+                    <div style="display:flex; justify-content:space-between;
+                                font-size:13px; color:#888; margin-bottom:6px;">
+                        <span>Room {{ room.room_number }} × 1 night</span>
+                        <span>₹{{ room.price_per_night }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;
+                                font-size:13px; color:#888; margin-bottom:10px;">
+                        <span>Taxes & fees (18%)</span>
+                        <span>₹{{ (room.price_per_night|float * 0.18)|int }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;
+                                font-size:15px; font-weight:700;
+                                color:#1a1a2e; border-top:1px solid #e0e8f0;
+                                padding-top:10px;">
+                        <span>Total</span>
+                        <span>₹{{ room.price_per_night }} / night</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-full"
+                        style="margin-top:20px; font-size:16px; padding:14px;">
+                    Complete Booking
+                </button>
+
+                <p style="font-size:12px; color:#888;
+                          text-align:center; margin-top:12px;">
+                    By clicking you agree to our terms & conditions
+                </p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Hotel Grand &nbsp;·&nbsp; All rights reserved
+</footer>
+
+</body>
+</html>
